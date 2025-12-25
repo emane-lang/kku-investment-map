@@ -6,95 +6,94 @@
     <title>الخارطة الاستثمارية للعقود الاستثمارية</title>
 
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* ✅ أهم تعديل: الصفحة ثابتة بدون تمرير */
         body {
             font-family: 'Tahoma', 'Arial', sans-serif;
             background-color: #f5f5f5;
-            direction: rtl;
+            color: #333;
+
             height: 100vh;
+            overflow: hidden;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ✅ يملأ الشاشة بالكامل */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        /* Header Styles */
+        /* ====== HEADER (نفس تصميمك) ====== */
         .header {
-            background: linear-gradient(135deg, #1a5f3f 0%, #2d8659 100%);
+            background: linear-gradient(135deg, #1a5f3f 0%, #a5b9b0 100%);
             color: white;
-            padding: 15px 20px;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 20px;
+            flex-shrink: 0;
         }
 
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
+            background-color: transparent;
+            border-radius: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .logo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-        }
-
-        .header-content {
-            flex: 1;
-            text-align: center;
+            background: #e4f3ec;
+            border-radius: 15px;
         }
 
         .header-content h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin: 0;
         }
 
         .header-content p {
             font-size: 14px;
+            margin-top: 5px;
             opacity: 0.9;
         }
 
-        /* Main Content */
+        /* ✅ أهم تعديل: المحتوى يتمدد بين الهيدر والفوتر بدون تمرير للصفحة */
         .content {
-            display: flex;
             flex: 1;
+            display: flex;
             overflow: hidden;
         }
 
-        /* Map Container */
-        .map-container {
-            flex: 1;
-            position: relative;
-            background-color: #e8f5e8;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Sidebar */
+        /* ✅ التمرير داخل القائمة فقط */
         .sidebar {
-            width: 400px;
+            width: 380px;
             background-color: white;
-            border-left: 2px solid #2d8659;
+            border-left: 1px solid #ddd;
             overflow-y: auto;
             padding: 20px;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar h2 {
@@ -105,19 +104,56 @@
             padding-bottom: 10px;
         }
 
-        /* Statistics Section */
-        .statistics {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border-radius: 10px;
+        /* فلاتر */
+        .filters {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
             padding: 15px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .filter-group { margin-bottom: 12px; }
+
+        .filter-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #1a5f3f;
+            margin-bottom: 6px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #2d8659;
+        }
+
+        /* الإحصائيات */
+        .statistics {
+            background: linear-gradient(135deg, #1a5f3f 0%, #a5b9b0 100%);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         .statistics h3 {
-            color: #1a5f3f;
-            font-size: 16px;
-            margin-bottom: 10px;
+            color: white;
+            font-size: 15px;
+            margin-bottom: 12px;
             text-align: center;
         }
 
@@ -128,19 +164,19 @@
         }
 
         .stat-item {
-            background: white;
-            border-radius: 8px;
-            padding: 10px;
+            background-color: white;
+            border-radius: 6px;
+            padding: 12px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .stat-item .number {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             color: #2d8659;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .stat-item .label {
@@ -148,55 +184,12 @@
             color: #666;
         }
 
-        /* Filters Section */
-        .filters {
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .filter-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .filter-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: bold;
-            color: #1a5f3f;
-            margin-bottom: 5px;
-        }
-
-        .filter-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: 'Tahoma', 'Arial', sans-serif;
-            background-color: white;
-            cursor: pointer;
-        }
-
-        .filter-group select:focus {
-            outline: none;
-            border-color: #2d8659;
-            box-shadow: 0 0 5px rgba(45,134,89,0.3);
-        }
-
-        /* Location List */
         .location-item {
             background-color: #f9f9f9;
             border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -204,118 +197,194 @@
         .location-item:hover {
             background-color: #e8f5e9;
             border-color: #2d8659;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(45,134,89,0.2);
+            box-shadow: 0 2px 6px rgba(45, 134, 89, 0.2);
+        }
+
+        .location-item.no-coordinates {
+            background-color: #fff3e0;
+            border-color: #ffb74d;
+            cursor: default;
+        }
+
+        .location-item.no-coordinates:hover {
+            background-color: #fff3e0;
+            border-color: #ffb74d;
+            box-shadow: none;
         }
 
         .location-item h3 {
             color: #1a5f3f;
             font-size: 16px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #e0e0e0;
             padding-bottom: 5px;
         }
 
+        .location-item.no-coordinates h3 { color: #f57c00; }
+
         .location-item p {
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 5px;
-            line-height: 1.4;
+            font-size: 12px;
+            color: #666;
+            margin: 4px 0;
+            line-height: 1.5;
         }
 
-        .location-item p strong {
-            color: #2d8659;
+        .location-item p strong { color: #2d8659; }
+
+        .no-coords-badge {
+            display: inline-block;
+            background-color: #ffb74d;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-top: 6px;
         }
 
-        /* Popup Styles */
+        .map-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
         .leaflet-popup-content {
             direction: rtl;
             text-align: right;
             font-family: 'Tahoma', 'Arial', sans-serif;
         }
 
-        /* Legend */
+        .leaflet-popup-content h4 {
+            color: #1a5f3f;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .leaflet-popup-content p {
+            margin: 5px 0;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .leaflet-popup-content strong { color: #2d8659; }
+
         .legend {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
+            background-color: white;
             border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
             margin-top: 15px;
         }
 
         .legend h3 {
             color: #1a5f3f;
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 8px;
         }
 
-        /* Footer */
-        .footer {
-            background-color: #f0f0f0;
-            padding: 10px 20px;
-            text-align: center;
-            border-top: 1px solid #ddd;
-            font-size: 12px;
-            color: #666;
+        .legend-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            margin: 6px 0;
+            font-size: 12px;
         }
 
-        .footer-logo {
-            height: 40px;
+        .legend-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 8px;
+            background-color: #2d8659;
+            border: 2px solid #1a5f3f;
         }
 
-        .footer-logo img {
-            height: 100%;
-            width: auto;
-            object-fit: contain;
+        .legend-marker.no-coords {
+            background-color: #ffb74d;
+            border-color: #f57c00;
         }
 
-        /* Empty State */
         .empty-state {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
             text-align: center;
-            background: rgba(255,255,255,0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            z-index: 1000;
+            padding: 20px;
         }
 
         .empty-state h3 {
-            color: #1a5f3f;
-            margin-bottom: 15px;
-            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
         }
 
         .empty-state p {
-            color: #666;
+            font-size: 13px;
             margin-bottom: 20px;
         }
 
-        .btn-retry {
+        .btn-upload {
             background: linear-gradient(135deg, #1a5f3f 0%, #2d8659 100%);
             color: white;
-            border: none;
             padding: 10px 20px;
-            border-radius: 8px;
+            border: none;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
-            font-family: 'Tahoma', 'Arial', sans-serif;
+            font-size: 13px;
             transition: all 0.3s ease;
         }
 
-        .btn-retry:hover {
+        .btn-upload:hover {
             transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(45,134,89,0.3);
+            box-shadow: 0 5px 15px rgba(26, 95, 63, 0.3);
         }
 
-        /* ✅ موبايل: الإحصائيات+الفلاتر ثم الخريطة + إخفاء قائمة المواقع */
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* ====== FOOTER (نفس تصميمك) ====== */
+        .footer {
+            flex-shrink: 0;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ddd;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .footer img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .footer a {
+            color: #1a5f3f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        /* ============================ */
+        /* ✅ توافق الجوال بدون لمس الديسكتوب */
+        /* ============================ */
         @media (max-width: 768px) {
             /* ✅ في الجوال: خلي الصفحة تتمرر عادي لأن overflow:hidden قد يضايق */
             body {
@@ -323,483 +392,430 @@
                 overflow: auto;
             }
 
-            .container {
-                overflow: visible;
-            }
+            .container { overflow: visible; }
 
             .content {
                 flex-direction: column;
                 overflow: visible;
             }
 
+            /* ✅ الهيدر نفس التصميم بس ترتيب عمودي مناسب */
             .header {
                 flex-direction: column;
                 gap: 10px;
             }
 
-            .header-content h1 {
-                font-size: 20px;
-            }
+            .header-content h1 { font-size: 20px; }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer {
-                flex-direction: column;
-                text-align: center;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
 
             /* ✅ ترتيب الجوال: الإحصائيات + الفلاتر أولاً ثم الخريطة */
-            .sidebar { 
-                order: 1;
+            .sidebar {
                 width: 100%;
-                max-height: none;
-                overflow: visible;
+                max-height: none;     /* بدل 400 عشان ما يقطع */
+                border-left: none;
+                border-top: 1px solid #ddd;
+                order: 1;
             }
-            .map-container { 
+
+            .map-container {
                 order: 2;
                 height: 60vh;
                 min-height: 330px;
             }
-            #map { 
+            #map {
                 height: 100%;
                 min-height: 330px;
             }
 
-            /* ✅ إخفاء قائمة المواقع في الجوال */
-            h2#locationsTitle, .locations-title { display: none; }
+            /* ✅ إخفاء قائمة المواقع على الجوال فقط */
+            .sidebar h2 { display: none; }
             #locationsList { display: none; }
+
+            /* ✅ الفوتر نفس التصميم لكن عمودي */
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
         }
-        /* ✅ تحسين الهيدر والفوتر للجوال بدون تغيير التصميم */
-@media (max-width: 768px) {
-
-  /* ===== Header ===== */
-  .header{
-    padding: 12px 14px;          /* نفس التصميم بس أضيق */
-    gap: 10px;
-    flex-wrap: wrap;             /* يسمح بالالتفاف */
-    justify-content: center;
-    text-align: center;
-  }
-
-  .logo{
-    width: 58px;                 /* تصغير الشعار */
-    height: 58px;
-    flex: 0 0 auto;
-  }
-
-  /* لو عندك div فارغ آخر الهيدر (مثل width:80px) نخفيه بالجوال */
-  .header > div[style*="width:80px"]{
-    display: none !important;
-  }
-
-  .header-content{
-    flex: 1 1 100%;
-    min-width: 240px;
-  }
-
-  .header-content h1{
-    font-size: 18px;             /* عنوان مناسب للجوال */
-    line-height: 1.35;
-    margin-bottom: 4px;
-  }
-
-  .header-content p{
-    font-size: 12px;
-    line-height: 1.5;
-    opacity: .95;
-  }
-
-  /* ===== Footer ===== */
-  .footer{
-    padding: 10px 14px;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .footer-logo{
-    height: 34px;                /* تصغير شعار الفوتر */
-  }
-
-  .footer-logo img{
-    height: 34px;
-  }
-}
-
     </style>
 </head>
 
 <body>
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">
-            <img src="logo.svg" alt="شعار">
-        </div>
-        <div class="header-content">
-            <h1>الخارطة الاستثمارية للعقود الاستثمارية</h1>
-            <p>خريطة تفاعلية لعرض المواقع والعقود المستثمرة</p>
-        </div>
-        <div style="width:80px"></div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content">
-        <!-- Map -->
-        <div class="map-container">
-            <div id="map"></div>
-            <div class="empty-state" id="emptyState">
-                <h3>لا توجد بيانات</h3>
-                <p>الرجاء إعادة المحاولة أولاً</p>
-                <button class="btn-retry" id="retryBtn">إعادة المحاولة</button>
+    <div class="container">
+        <!-- ===== Header ===== -->
+        <div class="header">
+            <div class="logo">
+                <img src="logo.svg" alt="شعار جامعة الملك خالد">
+            </div>
+            <div class="header-content">
+                <h1>الخارطة الاستثمارية للعقود الاستثمارية</h1>
+                <p>خريطة تفاعلية لعرض المواقع والعقود المستثمرة</p>
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="statistics">
-                <h3>📊 الإحصائيات</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="number" id="totalContracts">0</span>
-                        <span class="label">عدد العقود</span>
+        <div class="content">
+            <!-- ===== Map ===== -->
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <h3>لا توجد بيانات</h3>
+                    <p>الرجاء إعادة المحاولة أولاً</p>
+                    <button class="btn-upload" onclick="window.location.reload()">إعادة المحاولة</button>
+                </div>
+            </div>
+
+            <!-- ===== Sidebar ===== -->
+            <div class="sidebar">
+                <!-- الإحصائيات -->
+                <div class="statistics">
+                    <h3>📊 الإحصائيات</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="number" id="totalContracts">0</span>
+                            <span class="label">عدد العقود</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="number" id="totalLocations">0</span>
+                            <span class="label">عدد المواقع</span>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="number" id="totalLocations">0</span>
-                        <span class="label">عدد المواقع</span>
+                </div>
+
+                <!-- الفلاتر -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="filterSource">📍 الموقع:</label>
+                        <select id="filterSource">
+                            <option value="">جميع المواقع</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterBuilding">🏢 المبنى:</label>
+                        <select id="filterBuilding">
+                            <option value="">جميع المباني</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterStatus">🧾 الحالة:</label>
+                        <select id="filterStatus">
+                            <option value="">جميع الحالات</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2>قائمة المواقع</h2>
+                <div id="locationsList"></div>
+
+                <div class="legend">
+                    <h3>🔍 معلومات الخريطة</h3>
+                    <div style="font-size: 12px; color: #666; line-height: 1.6;">
+                        <p style="margin: 8px 0;"><strong>انقر على أي موقع</strong> لعرض التفاصيل</p>
+                        <p style="margin: 8px 0;"><strong>استخدم عجلة الماوس</strong> للتكبير والتصغير</p>
+                        <p style="margin: 8px 0;"><strong>اسحب الخريطة</strong> للتنقل بين المواقع</p>
                     </div>
                 </div>
             </div>
-
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="filterSource">📍 الموقع:</label>
-                    <select id="filterSource">
-                        <option value="">جميع المواقع</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="filterBuilding">🏢 المبنى:</label>
-                    <select id="filterBuilding">
-                        <option value="">جميع المباني</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="filterStatus">🧾 الحالة:</label>
-                    <select id="filterStatus">
-                        <option value="">جميع الحالات</option>
-                    </select>
-                </div>
-            </div>
-
-            <h2 id="locationsTitle">قائمة المواقع</h2>
-            <div id="locationsList"></div>
-
-            <div class="legend">
-                <h3>🔍 معلومات الخريطة</h3>
-                <div style="font-size: 12px; color: #666; line-height: 1.6;">
-                    <p style="margin: 8px 0;"><strong>انقر على أي موقع</strong> لعرض التفاصيل</p>
-                    <p style="margin: 8px 0;"><strong>استخدم عجلة الماوس</strong> للتكبير والتصغير</p>
-                    <p style="margin: 8px 0;"><strong>اسحب الخريطة</strong> للتنقل بين المواقع</p>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div>طور بواسطة شركة مزيج للاستشارات المهنية</div>
-        <div class="footer-logo">
-            <a href="https://mazeej.com.sa/" target="_blank" rel="noreferrer">
-                <img src="mazeej-logo.png" alt="Mazeej">
+        <!-- ===== Footer ===== -->
+        <div class="footer">
+            <span>طور بواسطة شركة مزيج للاستشارات المهنية</span>
+            <a href="https://mazeej.com.sa/" target="_blank">
+                <img src="mazeej-logo.png" alt="شعار مزيج">
             </a>
         </div>
     </div>
-</div>
 
-<!-- Leaflet JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
-<script>
-    let map;
-    let markers = [];
-    let allSites = [];
-    let currentFilters = {
-        source: '',
-        building: '',
-        status: ''
-    };
+    <script>
+        let map = null;
+        let allSites = [];
+        let markers = [];
+        let currentFilters = { source: '', building: '', status: '' };
 
-    function initMap() {
-        map = L.map('map').setView([18.2164, 42.5053], 10);
+        function initMap() {
+            map = L.map('map').setView([18.2164, 42.5053], 10);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-    }
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
 
-    function showEmptyState(show) {
-        document.getElementById('emptyState').style.display = show ? 'block' : 'none';
-    }
-
-    function normalizeFileNo(raw) {
-        const s = (raw ?? '').toString().trim();
-        if (s === '') return '';
-        const n = parseInt(s, 10);
-        const fileKey = Number.isFinite(n) ? String(n).padStart(3, '0') : s;
-        return fileKey;
-    }
-
-    function isValidCoord(lat, lon) {
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return false;
-        if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return false;
-        return true;
-    }
-
-    async function loadData() {
-        try {
-            // تحميل البيانات من sites.json (بدون رفع Excel)
-            const res = await fetch('sites.json', { cache: 'no-store' });
-            if (!res.ok) throw new Error('sites.json not found');
-
-            const data = await res.json();
-            if (!Array.isArray(data) || data.length === 0) throw new Error('empty');
-
-            allSites = data;
-
-            showEmptyState(false);
-            populateFilters(allSites);
-            displaySites(allSites);
-
-        } catch (e) {
-            console.error(e);
-            showEmptyState(true);
-        }
-    }
-
-    function populateFilters(sites) {
-        const sources = new Set();
-        const buildings = new Set();
-        const statuses = new Set(); // (غير مستخدم)
-
-        sites.forEach(site => {
-            if (site.details) {
-                if (site.details['الموقع حسب المصدر']) sources.add(site.details['الموقع حسب المصدر']);
-                if (site.details['المبنى']) buildings.add(site.details['المبنى']);
-                // تم تعطيل تعبئة الحالات من البيانات لمنع ظهور (غير محدد)
-            }
-        });
-
-        const sourceSelect = document.getElementById('filterSource');
-        sourceSelect.innerHTML = '<option value="">جميع المواقع</option>';
-        Array.from(sources).sort().forEach(source => {
-            const option = document.createElement('option');
-            option.value = source;
-            option.textContent = source;
-            sourceSelect.appendChild(option);
-        });
-
-        const buildingSelect = document.getElementById('filterBuilding');
-        buildingSelect.innerHTML = '<option value="">جميع المباني</option>';
-        Array.from(buildings).sort().forEach(building => {
-            const option = document.createElement('option');
-            option.value = building;
-            option.textContent = building;
-            buildingSelect.appendChild(option);
-        });
-
-        const statusSelect = document.getElementById('filterStatus');
-        statusSelect.innerHTML = '<option value="">جميع الحالات</option>';
-        // ✅ إظهار خيارين فقط: منتهي، ساري (بدون غير محدد)
-        ['منتهي','ساري'].forEach(status => {
-            const option = document.createElement('option');
-            option.value = status;
-            option.textContent = status;
-            statusSelect.appendChild(option);
-        });
-
-        sourceSelect.addEventListener('change', (e) => {
-            currentFilters.source = e.target.value;
-            updateBuildingFilter();
-            filterAndDisplaySites();
-        });
-
-        buildingSelect.addEventListener('change', (e) => {
-            currentFilters.building = e.target.value;
-            filterAndDisplaySites();
-        });
-
-        statusSelect.addEventListener('change', (e) => {
-            currentFilters.status = e.target.value;
-            filterAndDisplaySites();
-        });
-    }
-
-    function updateBuildingFilter() {
-        const buildingSelect = document.getElementById('filterBuilding');
-        const currentBuilding = buildingSelect.value;
-
-        let filteredForBuildings = allSites;
-        if (currentFilters.source) {
-            filteredForBuildings = allSites.filter(site =>
-                site.details && site.details['الموقع حسب المصدر'] === currentFilters.source
-            );
+            // ✅ يحل مشكلة المقاس على الجوال بعد ترتيب العناصر
+            setTimeout(() => { if (map) map.invalidateSize(); }, 300);
         }
 
-        const buildings = new Set();
-        filteredForBuildings.forEach(site => {
-            if (site.details && site.details['المبنى']) buildings.add(site.details['المبنى']);
-        });
+        function populateFilters(sites) {
+            const sources = new Set();
+            const buildings = new Set();
 
-        buildingSelect.innerHTML = '<option value="">جميع المباني</option>';
-        Array.from(buildings).sort().forEach(building => {
-            const option = document.createElement('option');
-            option.value = building;
-            option.textContent = building;
-            buildingSelect.appendChild(option);
-        });
+            sites.forEach(site => {
+                if (site.details) {
+                    if (site.details['الموقع حسب المصدر']) sources.add(site.details['الموقع حسب المصدر']);
+                    if (site.details['المبنى']) buildings.add(site.details['المبنى']);
+                }
+            });
 
-        if (buildings.has(currentBuilding)) {
-            buildingSelect.value = currentBuilding;
-        } else {
-            currentFilters.building = '';
+            const sourceSelect = document.getElementById('filterSource');
+            sourceSelect.innerHTML = '<option value="">جميع المواقع</option>';
+            Array.from(sources).sort().forEach(source => {
+                const option = document.createElement('option');
+                option.value = source;
+                option.textContent = source;
+                sourceSelect.appendChild(option);
+            });
+
+            const buildingSelect = document.getElementById('filterBuilding');
+            buildingSelect.innerHTML = '<option value="">جميع المباني</option>';
+            Array.from(buildings).sort().forEach(building => {
+                const option = document.createElement('option');
+                option.value = building;
+                option.textContent = building;
+                buildingSelect.appendChild(option);
+            });
+
+            // ✅ تعديل الحالة فقط: خيارات ثابتة بدون "غير محدد"
+            const statusSelect = document.getElementById('filterStatus');
+            statusSelect.innerHTML = '<option value="">جميع الحالات</option>';
+            ['منتهي', 'ساري'].forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.textContent = status;
+                statusSelect.appendChild(option);
+            });
+
+            sourceSelect.addEventListener('change', (e) => {
+                currentFilters.source = e.target.value;
+                updateBuildingFilter();
+                filterAndDisplaySites();
+            });
+
+            buildingSelect.addEventListener('change', (e) => {
+                currentFilters.building = e.target.value;
+                filterAndDisplaySites();
+            });
+
+            statusSelect.addEventListener('change', (e) => {
+                currentFilters.status = e.target.value;
+                filterAndDisplaySites();
+            });
         }
-    }
 
-    function filterSites(sites) {
-        return sites.filter(site => {
-            if (currentFilters.source && site.details &&
-                site.details['الموقع حسب المصدر'] !== currentFilters.source) return false;
+        function updateBuildingFilter() {
+            const buildingSelect = document.getElementById('filterBuilding');
+            const currentBuilding = buildingSelect.value;
 
-            if (currentFilters.building && site.details &&
-                site.details['المبنى'] !== currentFilters.building) return false;
-
-            if (currentFilters.status && site.details &&
-                site.details['حالة العقد'] !== currentFilters.status) return false;
-
-            return true;
-        });
-    }
-
-    function filterAndDisplaySites() {
-        const filteredSites = filterSites(allSites);
-        displaySites(filteredSites);
-    }
-
-    function displaySites(sites) {
-        if (!map) initMap();
-
-        markers.forEach(marker => map.removeLayer(marker));
-        markers = [];
-        document.getElementById('locationsList').innerHTML = '';
-
-        // ================= الإحصائيات =================
-        const uniqueContracts = new Set();
-        let locationsCount = 0;
-
-        sites.forEach(site => {
-            const rawFile = (site?.details?.['رقم الملف'] ?? '').toString().trim();
-            if (rawFile !== '') {
-                const fileKey = normalizeFileNo(rawFile);
-                if (fileKey !== '000') uniqueContracts.add(fileKey);
+            let filteredForBuildings = allSites;
+            if (currentFilters.source) {
+                filteredForBuildings = allSites.filter(site =>
+                    site.details && site.details['الموقع حسب المصدر'] === currentFilters.source
+                );
             }
 
-            const latRaw = (site?.lat ?? '').toString().trim();
-            const lonRaw = (site?.lon ?? '').toString().trim();
-            if (latRaw === '' || lonRaw === '') return;
-
-            const lat = Number(latRaw);
-            const lon = Number(lonRaw);
-            if (!isValidCoord(lat, lon)) return;
-
-            locationsCount++;
-        });
-
-        document.getElementById('totalContracts').textContent = uniqueContracts.size;
-        document.getElementById('totalLocations').textContent = locationsCount;
-        // =============================================
-
-        if (!sites || sites.length === 0) return;
-
-        const bounds = [];
-
-        sites.forEach((location) => {
-            const latRaw = (location?.lat ?? '').toString().trim();
-            const lonRaw = (location?.lon ?? '').toString().trim();
-            if (latRaw === '' || lonRaw === '') return;
-
-            const lat = Number(latRaw);
-            const lon = Number(lonRaw);
-            if (!isValidCoord(lat, lon)) return;
-
-            const details = location.details || {};
-            const activityTitle = (details['النشاط'] ?? 'غير محدد').toString().trim() || 'غير محدد';
-
-            let popupContent = '<div style="direction: rtl; text-align: right; font-family: Tahoma, Arial, sans-serif;">';
-            popupContent += '<h4 style="color:#1a5f3f; margin-bottom:10px; font-size:15px; font-weight:bold; border-bottom:1px solid #eee; padding-bottom:5px;">'
-                + activityTitle + '</h4>';
-
-            const fields = [
-                { key: 'الموقع حسب المصدر', label: 'الموقع' },
-                { key: 'المبنى', label: 'المبنى' },
-                { key: 'المستثمر', label: 'المستثمر' },
-                { key: 'الأجرة السنوية', label: 'الأجرة' },
-                { key: 'حالة العقد', label: 'حالة العقد' }
-            ];
-
-            fields.forEach(field => {
-                const value = (details[field.key] ?? '').toString().trim();
-                popupContent += `<p style="margin:5px 0; font-size:12px; color:#333;"><strong style="color:#2d8659;">${field.label}:</strong> ${value || '<em style="color:#999;">غير محدد</em>'}</p>`;
+            const buildings = new Set();
+            filteredForBuildings.forEach(site => {
+                if (site.details && site.details['المبنى']) buildings.add(site.details['المبنى']);
             });
 
-            popupContent += `<p style="margin:5px 0; font-size:12px; color:#333;"><strong style="color:#2d8659;">الاحداثيات:</strong> ${lat.toFixed(6)}, ${lon.toFixed(6)}</p>`;
-            popupContent += '</div>';
-
-            const marker = L.marker([lat, lon]).addTo(map).bindPopup(popupContent);
-            markers.push(marker);
-            bounds.push([lat, lon]);
-
-            // Cards list (desktop)
-            const list = document.getElementById('locationsList');
-            const item = document.createElement('div');
-            item.className = 'location-item';
-
-            let html = `<h3>${activityTitle}</h3>`;
-            fields.forEach(field => {
-                const value = (details[field.key] ?? '').toString().trim();
-                html += `<p><strong>${field.label}:</strong> ${value || '<em style="color:#999;">غير محدد</em>'}</p>`;
-            });
-            html += `<p><strong>الاحداثيات:</strong> ${lat.toFixed(6)}, ${lon.toFixed(6)}</p>`;
-            item.innerHTML = html;
-
-            item.addEventListener('click', () => {
-                map.setView([lat, lon], 15);
-                setTimeout(() => marker.openPopup(), 200);
+            buildingSelect.innerHTML = '<option value="">جميع المباني</option>';
+            Array.from(buildings).sort().forEach(building => {
+                const option = document.createElement('option');
+                option.value = building;
+                option.textContent = building;
+                buildingSelect.appendChild(option);
             });
 
-            list.appendChild(item);
-        });
-
-        if (bounds.length > 0) {
-            map.fitBounds(bounds, { padding: [20, 20] });
+            if (buildings.has(currentBuilding)) {
+                buildingSelect.value = currentBuilding;
+            } else {
+                currentFilters.building = '';
+            }
         }
 
-        setTimeout(() => { if (map) map.invalidateSize(); }, 250);
-    }
+        function filterSites(sites) {
+            return sites.filter(site => {
+                if (currentFilters.source && site.details &&
+                    site.details['الموقع حسب المصدر'] !== currentFilters.source) return false;
 
-    document.getElementById('retryBtn').addEventListener('click', loadData);
+                if (currentFilters.building && site.details &&
+                    site.details['المبنى'] !== currentFilters.building) return false;
 
-    window.addEventListener('load', () => {
-        loadData();
-    });
+                if (currentFilters.status && site.details &&
+                    site.details['حالة العقد'] !== currentFilters.status) return false;
 
-    window.addEventListener('resize', () => {
-        if (map) map.invalidateSize();
-    });
-</script>
+                return true;
+            });
+        }
+
+        function filterAndDisplaySites() {
+            const filteredSites = filterSites(allSites);
+            displaySites(filteredSites);
+        }
+
+        function displaySites(sites) {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            document.getElementById('locationsList').innerHTML = '';
+
+            // ================= الإحصائيات =================
+            const uniqueContracts = new Set();
+            let locationsCount = 0;
+
+            sites.forEach(site => {
+                const rawFile = (site?.details?.['رقم الملف'] ?? '').toString().trim();
+
+                if (rawFile !== '') {
+                    const n = parseInt(rawFile, 10);
+                    const fileKey = Number.isFinite(n)
+                        ? String(n).padStart(3, '0')
+                        : rawFile;
+
+                    if (fileKey !== '000') uniqueContracts.add(fileKey);
+                }
+
+                const latRaw = (site?.lat ?? '').toString().trim();
+                const lonRaw = (site?.lon ?? '').toString().trim();
+
+                if (latRaw === '' || lonRaw === '') return;
+
+                const lat = Number(latRaw);
+                const lon = Number(lonRaw);
+
+                if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+                if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+
+                locationsCount++;
+            });
+
+            document.getElementById('totalContracts').textContent = uniqueContracts.size;
+            document.getElementById('totalLocations').textContent = locationsCount;
+            // =============================================
+
+            if (sites.length === 0) {
+                document.getElementById('locationsList').innerHTML =
+                    '<div class="no-results">لا توجد نتائج تطابق الفلاتر المحددة</div>';
+                return;
+            }
+
+            sites.forEach((location) => {
+                const lat = (location.lat !== null && location.lat !== undefined && String(location.lat).trim() !== '') ? parseFloat(location.lat) : NaN;
+                const lon = (location.lon !== null && location.lon !== undefined && String(location.lon).trim() !== '') ? parseFloat(location.lon) : NaN;
+                const validCoords = Number.isFinite(lat) && Number.isFinite(lon);
+
+                const activityTitle = location.details && location.details['النشاط'] ? location.details['النشاط'] : 'غير محدد';
+
+                if (validCoords) {
+                    let popupContent = '<div style="direction: rtl; text-align: right; font-family: Tahoma, Arial, sans-serif;">';
+                    popupContent += '<h4 style="color: #1a5f3f; margin-bottom: 10px; font-size: 15px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px;">' + activityTitle + '</h4>';
+
+                    const cardFields = [
+                        { key: 'الموقع حسب المصدر', label: 'الموقع' },
+                        { key: 'المبنى', label: 'المبنى' },
+                        { key: 'المستثمر', label: 'المستثمر' },
+                        { key: 'الأجرة السنوية', label: 'الأجرة' },
+                        { key: 'حالة العقد', label: 'حالة العقد' }
+                    ];
+
+                    cardFields.forEach(field => {
+                        let value = location.details ? location.details[field.key] : '';
+                        if (value) {
+                            popupContent += '<p style="margin: 5px 0; font-size: 12px; color: #333;"><strong style="color: #2d8659;">' + field.label + ':</strong> ' + value + '</p>';
+                        } else {
+                            popupContent += '<p style="margin: 5px 0; font-size: 12px; color: #999;"><strong style="color: #2d8659;">' + field.label + ':</strong> <em>غير محدد</em></p>';
+                        }
+                    });
+
+                    const coordsValue = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+                    popupContent += '<p style="margin: 5px 0; font-size: 12px; color: #333;"><strong style="color: #2d8659;">الاحداثيات:</strong> ' + coordsValue + '</p>';
+                    popupContent += '</div>';
+
+                    const marker = L.marker([lat, lon]).addTo(map).bindPopup(popupContent);
+                    markers.push(marker);
+                } else {
+                    return;
+                }
+
+                const locationItem = document.createElement('div');
+                locationItem.className = 'location-item';
+                locationItem.setAttribute('data-location-id', location.id);
+
+                let itemHTML = '<h3>' + activityTitle + '</h3>';
+
+                const cardFieldsForList = [
+                    { key: 'الموقع حسب المصدر', label: 'الموقع' },
+                    { key: 'المبنى', label: 'المبنى' },
+                    { key: 'المستثمر', label: 'المستثمر' },
+                    { key: 'الأجرة السنوية', label: 'الأجرة' },
+                    { key: 'حالة العقد', label: 'حالة العقد' }
+                ];
+
+                cardFieldsForList.forEach(field => {
+                    let value = location.details ? location.details[field.key] : '';
+                    if (value) itemHTML += '<p><strong>' + field.label + ':</strong> ' + value + '</p>';
+                    else itemHTML += '<p style="color: #999;"><strong>' + field.label + ':</strong> <em>غير محدد</em></p>';
+                });
+
+                itemHTML += '<p><strong>الاحداثيات:</strong> ' + lat.toFixed(6) + ', ' + lon.toFixed(6) + '</p>';
+                locationItem.innerHTML = itemHTML;
+
+                locationItem.addEventListener('click', () => {
+                    map.setView([lat, lon], 15);
+                    const marker = markers.find(m => {
+                        const p = m.getLatLng();
+                        return Math.abs(p.lat - lat) < 0.0001 && Math.abs(p.lng - lon) < 0.0001;
+                    });
+                    if (marker) setTimeout(() => marker.openPopup(), 300);
+                });
+
+                document.getElementById('locationsList').appendChild(locationItem);
+            });
+
+            if (markers.length > 0) {
+                const group = L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+
+            // ✅ للجوال بعد إعادة الترتيب
+            setTimeout(() => { if (map) map.invalidateSize(); }, 250);
+        }
+
+        function loadData() {
+            fetch('sites.json', { cache: 'no-store' })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(sites => {
+                    if (!sites || !sites.length) throw new Error('Empty data');
+
+                    document.getElementById('map').style.display = 'block';
+                    document.getElementById('emptyState').style.display = 'none';
+
+                    if (!map) initMap();
+
+                    allSites = sites;
+                    populateFilters(sites);
+                    displaySites(sites);
+                })
+                .catch(error => {
+                    console.error('خطأ في تحميل البيانات:', error);
+                    document.getElementById('emptyState').style.display = 'flex';
+                    document.getElementById('map').style.display = 'none';
+
+                    const btn = document.querySelector('#emptyState .btn-upload');
+                    if (btn) {
+                        btn.textContent = 'إعادة المحاولة';
+                        btn.onclick = () => window.location.reload();
+                    }
+                });
+        }
+
+        window.addEventListener('load', loadData);
+        window.addEventListener('pageshow', loadData);
+        window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
+    </script>
 </body>
 </html>
