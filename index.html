@@ -659,46 +659,46 @@
             markers.forEach(marker => map.removeLayer(marker));
             markers = [];
             document.getElementById('locationsList').innerHTML = '';
+updateStatsAllRows(sites);
 
             // ================= الإحصائيات =================
-            const uniqueContracts = new Set();
-            let locationsCount = 0;
+ function normalizeFileNo(raw) {
+  const s = (raw ?? '').toString().trim();
+  if (!s) return '';
+  const n = parseInt(s, 10);
+  if (Number.isFinite(n)) return String(n).padStart(3, '0');
+  return s;
+}
 
-            sites.forEach(site => {
-                const rawFile = (site?.details?.['رقم الملف'] ?? '').toString().trim();
+function updateStatsAllRows(sites) {
+  const contracts = new Set();
+  const endedContracts = new Set();
 
-                if (rawFile !== '') {
-                    const n = parseInt(rawFile, 10);
-                    const fileKey = Number.isFinite(n)
-                        ? String(n).padStart(3, '0')
-                        : rawFile;
+  sites.forEach(site => {
+    const d = site.details || {};
 
-                    if (fileKey !== '000') uniqueContracts.add(fileKey);
-                }
+    // ✅ رقم العقد الصحيح حسب ملفك
+    const contractId = normalizeFileNo(d['رقم الملف خاص مزيج']);
 
-                const latRaw = (site?.lat ?? '').toString().trim();
-                const lonRaw = (site?.lon ?? '').toString().trim();
+    if (contractId && contractId !== '000') {
+      contracts.add(contractId);
 
-                if (latRaw === '' || lonRaw === '') return;
+      const status = (d['حالة العقد'] ?? '').toString().trim();
+      if (status === 'منتهي') endedContracts.add(contractId);
+    }
+  });
 
-                const lat = Number(latRaw);
-                const lon = Number(lonRaw);
+  // ✅ عدد المواقع = جميع الصفوف
+  document.getElementById('totalLocations').textContent = sites.length;
 
-                if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
-                if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+  // ✅ عدد العقود = بدون تكرار
+  document.getElementById('totalContracts').textContent = contracts.size;
 
-                locationsCount++;
-            });
+  // ✅ عدد المنتهي (لو عندك عنصر)
+  const endedEl = document.getElementById('totalEnded');
+  if (endedEl) endedEl.textContent = endedContracts.size;
+}
 
-            document.getElementById('totalContracts').textContent = uniqueContracts.size;
-            document.getElementById('totalLocations').textContent = locationsCount;
-            // =============================================
-
-            if (sites.length === 0) {
-                document.getElementById('locationsList').innerHTML =
-                    '<div class="no-results">لا توجد نتائج تطابق الفلاتر المحددة</div>';
-                return;
-            }
 
             sites.forEach((location) => {
                 const lat = (location.lat !== null && location.lat !== undefined && String(location.lat).trim() !== '') ? parseFloat(location.lat) : NaN;
