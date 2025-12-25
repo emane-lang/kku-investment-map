@@ -615,16 +615,13 @@
       const filteredSites = filterSites(allSites);
       displaySites(filteredSites);
     }
-// 🔴 أيقونة حمراء للعقود المنتهية
-const redIcon = new L.Icon({
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-red.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
 
+    function displaySites(sites) {
+      if (!map) initMap();
+
+      markers.forEach(marker => map.removeLayer(marker));
+      markers = [];
+      document.getElementById('locationsList').innerHTML = '';
 
       // ✅ الإحصائيات حسب الفلاتر الحالية (عقود Unique + الصفوف)
       updateContractStats(sites);
@@ -673,12 +670,7 @@ const redIcon = new L.Icon({
           popupContent += '<p><strong>الاحداثيات:</strong> ' + coordsValue + '</p>';
           popupContent += '</div>';
 
-const status = (d['حالة العقد'] ?? '').toString().trim();
-
-const marker = L.marker(
-  [lat, lon],
-  status === 'منتهي' ? { icon: redIcon } : {}
-).addTo(map).bindPopup(popupContent);
+          const marker = L.marker([lat, lon]).addTo(map).bindPopup(popupContent);
           markers.push(marker);
         }
 
