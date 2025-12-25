@@ -625,16 +625,6 @@ const redIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-function displaySites(sites) {
-  // كودك الحالي
-}
-
-    function displaySites(sites) {
-      if (!map) initMap();
-
-      markers.forEach(marker => map.removeLayer(marker));
-      markers = [];
-      document.getElementById('locationsList').innerHTML = '';
 
       // ✅ الإحصائيات حسب الفلاتر الحالية (عقود Unique + الصفوف)
       updateContractStats(sites);
